@@ -1,0 +1,58 @@
+# Windows default autosave extension
+*.asv
+
+# OSX / *nix default autosave extension
+*.m~
+
+# simulink autosave
+*.original
+
+# Compiled MEX binaries (all platforms)
+*.mex*
+
+# Packaged app and toolbox files
+*.mlappinstall
+*.mltbx
+
+# Generated helpsearch folders
+helpsearch*/
+
+# Simulink code generation folders
+slprj/
+sccprj/
+
+# Matlab code generation folders
+codegen/
+proc_control_ert_rtw/
+proc_planner_ert_rtw/
+
+# Simulink autosave extension
+*.autosave
+
+# Simulink cache files
+*.slxc
+
+#Generated msgtoBus and bustoMsg from Matlab
++bus_conv_fcns/
+
+#Proc_Control_node and sonia_common for code generation
+src/src/
+src/proc_control_node/
+proc_control_node/
+
+# c/c++ code
+*.h
+*.c 
+*.cpp
+
+#Build files from Simulink
+*.sh
+*.tgz
+*.zip
+
+# catkin files
+*.catkin_workspace
+
+# vs code
+.vs/
+.vscode/
