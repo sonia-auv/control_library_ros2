@@ -1,17 +1,17 @@
 classdef RosparamClass < handle
-   %
-
+    %
+    
     properties
         ptree
     end
-
+    
     methods (Access = public)
         function this = RosparamClass(ptree_ros)
             %ROSPARAM Construct an instance of this class
             %   Detailed explanation goes here
             this.ptree = ptree_ros;
         end
-
+        
         %% get rosparam number
         function valueRequested = getValue(this, value, actualValue)
             valueRequested = zeros(1,1);
@@ -21,16 +21,16 @@ classdef RosparamClass < handle
                 fprintf("%s : %f \n", value, val);
             else
                 valueRequested(1,1) = double(actualValue(1,1));
-
+                
             end
         end
         %% Get float32 array
         function gainRequested = getArray(this, gain, nbGains, actualGain)
             % rosparam array not supported for codegen. use string instead
             gainRequested =zeros(1,nbGains);
-
+            
             if has(this.ptree, gain)
-
+                
                 if coder.target('MATLAB')
                     [gains, status] = get(this.ptree, gain);
                 else
@@ -39,23 +39,23 @@ classdef RosparamClass < handle
                 fprintf("rosin : %s \n", gains);
                 fprintf("size : %d \n", int8(status));
                 gainsArray = this.extractionArray(gains, nbGains);
-
+                
                 if ~isnan(gainsArray)
                     gainRequested(1,1:nbGains) = gainsArray(1,1:nbGains);
                 else
                     gainRequested(1,1:nbGains) = actualGain(1,1:nbGains);
                 end
-
+                
             else
                 gainRequested(1,1:nbGains) = actualGain(1,1:nbGains);
             end
         end
-
+        
     end
-
-
+    
+    
     methods(Access = protected)
-
+        
         %% string2array
         function array = extractionArray(this, str, nbElements)
             array = ones(1, nbElements);
@@ -69,7 +69,7 @@ classdef RosparamClass < handle
             end
         end
     end
-
-
+    
+    
 end
 
