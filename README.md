@@ -74,31 +74,9 @@ If you need to update cmake, you can follow this tutorial.
 > https://www.mathworks.com/matlabcentral/answers/623103-matlab-2020b-rosgenmsg-can-t-find-cmake#answer_753184
 
 ## Building ROS custom messages in matlab.
-Before building ros custom messages, matlab 2022a require python 3.9 **virtual environment**.
+in the matlab terminal, run the following:
+`rosgenmsg('~/ros_sonia_ws/src/sonia_common_ros2')`
 
-You can install the virtual environment with the following command:
-
-`sudo apt install python3.9 python3.9-venv python3.9-dev`
-
-Next thing is to create a virtual environment. I have already explained it in a matlab answers forum, which you can read here :
-
-> https://www.mathworks.com/matlabcentral/answers/1690800-error-in-building-custom-ros-messages#answer_937270
-
-All the custom ROS messages used by SONIA are located in the sonia_common repo. You have to clone this repo in your catkin workspace.
-
-> https://github.com/sonia-auv/sonia_common
-
-You need to generate the ros message in matlab to be able to use it. To do so, navigate to your src folder in the matlab file explorer, than run the next command and follow the instructions.
-
-`rosgenmsg('./')`
-
-If Matlab doesn't find the python executable, check first if python is installed on your machine. Type in a command windows:
-
-`python3 --version`
-
-Then, you have to tell Matlab where your python executable is. To do so, type the following command in your Matlab console:
-
-`pyenv('Version',<your python executable path>)`
 
 ## Add the working folder in the Matlab path.
 In your Matlab window, right click on the **src** and click on **Add to Path / Selected Folder and Subfolders**.

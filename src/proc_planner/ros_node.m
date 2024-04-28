@@ -1,8 +1,13 @@
 classdef  ros_node < handle
     
+
+    properties
+        internalNode;
+    end
+
     properties (Access = private)
         % Definir les Subscrier ros
-        madpSub; % multi add pose subscriber
+        poseArrSub; % pose array subscriber
         icSub; % current target sub
         obstacleSub; % proc_mapping info
         
@@ -21,14 +26,15 @@ classdef  ros_node < handle
     methods
         % Constructor
         function this = ros_node()
+            this.internalNode = ros2node("proc_planner");
             % Definir les Subscrier ros
-            this.madpSub = rossubscriber('/proc_planner/send_multi_addpose','sonia_common/MultiAddPose',@this.madCallback,"DataFormat","struct");
-            this.icSub = rossubscriber("/proc_control/current_target","geometry_msgs/Pose",@this.icCallback,"DataFormat","struct");
-            this.obstacleSub = rossubscriber("/proc_mapping/obstacle_infos", "sonia_common/ObstacleArray","DataFormat","struct");
+            this.poseArrSub = ros2subscriber(this.internalNode, '/proc_planner/send_multi_addpose','sonia_common_ros2/PoseArray',@this.madCallback);
+            this.icSub = ros2subscriber(this.internalNode, "/proc_control/current_target","geometry_msgs/Pose",@this.icCallback);
+            this.obstacleSub = ros2subscriber(this.internalNode, "/proc_mapping/obstacle_infos", "sonia_common_ros2/ObstacleArray");
             
             % Definir les publisher ROS
-            this.trajpub = rospublisher('/proc_planner/send_trajectory_list','trajectory_msgs/MultiDOFJointTrajectoryPoint',"DataFormat","struct","IsLatching",false);
-            this.validPub = rospublisher("/proc_planner/is_waypoints_valid","std_msgs/Int8","DataFormat","struct","IsLatching",false);
+            this.trajpub = ros2publisher(this.internalNode, '/proc_planner/send_trajectory_list','trajectory_msgs/MultiDOFJointTrajectoryPoint');
+            this.validPub = ros2publisher(this.internalNode, "/proc_planner/is_waypoints_valid","std_msgs/Int8");
             
             % Get ros param
             this.param = this.getRosParam();
@@ -38,7 +44,7 @@ classdef  ros_node < handle
         % Ros Spin
         function spin(this,spin)
             
-            validMsg = rosmessage("std_msgs/Int8","DataFormat","struct");
+            validMsg = ros2message("std_msgs/Int8");
             killNode = false;
             
             reset(spin);
@@ -61,7 +67,7 @@ classdef  ros_node < handle
                     this.TrajIsGenerating = true;
                     
                     % Cree l'objet trajectoire
-                    TG = TrajectoryGenerator(this.madpSub.LatestMessage,this.param,this.icSub.LatestMessage,this.obstacleSub.LatestMessage);
+                    TG = TrajectoryGenerator(this.poseArrSub.LatestMessage,this.param,this.icSub.LatestMessage,this.obstacleSub.LatestMessage);
                     
                     % Envoyer a ros si le mAddpose est valide
                     validMsg.Data = int8(TG.status);

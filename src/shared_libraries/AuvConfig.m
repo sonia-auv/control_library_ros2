@@ -73,7 +73,5 @@ classdef AuvConfig
             B = [zeros(7,8);Tm];
         end
     end
-    
-    
 end
 

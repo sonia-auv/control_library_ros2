@@ -32,11 +32,13 @@ classdef TrajectoryGenerator < handle
         qUtils; % quaternion utilities
         
         % Structures
+        PAM; % Pose Array Message.
         MAPM; % Multi Add Pose Msg.
         param; % paramètre de trajectoire.
         obstacleData; % Information des obstacle
         
         % Parametres
+        nPAM;      % Number of waypoints in Pose Array Message
         nMAPM;     % nombre de waypoints dans la liste multiaddpose.
         n;         % Nombre de waypoints réel.
         lastConj = false; % condition de discontinute du quaternion.
@@ -64,15 +66,15 @@ classdef TrajectoryGenerator < handle
     methods
         %==================================================================
         % Constructeur
-        function this = TrajectoryGenerator(multiAddposeMsg, param, icMsg, obstMsg)
+        function this = TrajectoryGenerator(poseArrayMsg, param, icMsg, obstMsg)
             % Initialise l'objet trajectoire et vérifie si le message multi add pose est valide.
             
             this.status = this.RECIEVED_VALID_WAYPTS; % Validité de waypoints reçus.
             
             this.obstacleData = obstMsg; % prendre les infos des obstacles.
             
-            this.MAPM =multiAddposeMsg;
-            this.nMAPM = max(size(multiAddposeMsg.Pose)); % matlab and cpp dont use same index. return max instead
+            this.PAM = poseArrayMsg;
+            this.nPAM = max(size(poseArrayMsg.poses)); % matlab and cpp dont use same index. return max instead
             
             % Initialiser les parametres
             this.param = param;
@@ -81,24 +83,24 @@ classdef TrajectoryGenerator < handle
             this.qUtils = quatUtilities();
             
             % Verifier que le dernier point ne contient pas de rayon.
-            if this.MAPM.Pose(this.nMAPM).Fine ~= 0
+            if this.PAM.poses(this.nPAM).fine ~= 0
                 
-                this.MAPM.Pose(this.nMAPM).Fine = 0;
+                this.PAM.poses(this.nPAM).fine = 0;
                 fprintf('Warning : proc planner : last waypoint must have fine parameter set to 0 \n');
                 
             end
             
             % point supplementaire pour l'arrondissement.
             suppPoint = 0;
-            for i=1 : this.nMAPM
+            for i=1 : this.nPAM
                 
-                if ~(this.MAPM.Pose(i).Fine == 0)
+                if ~(this.PAM.poses(i).fine == 0)
                     suppPoint =suppPoint + 1;
                 end
             end
             
             % nombre de waypoints  + point supp + offset + point initial
-            this.n = this.nMAPM + suppPoint + this.icOffset + 1;
+            this.n = this.nPAM + suppPoint + this.icOffset + 1;
             
             % Initialiser les tableaux
             this.pointList = zeros(this.n,3);
@@ -181,27 +183,27 @@ classdef TrajectoryGenerator < handle
         % Fonction qui interprete les waypoints reçu par ROS
         function processWpt(this)
             
-            for i = 1 : this.nMAPM % pour chaques AddPose
+            for i = 1 : this.nPAM % pour chaques AddPose
                 
                 % transformer les angle d'euler quaternions
-                q = eul2quat(deg2rad([this.MAPM.Pose(i).Orientation.Z,...
-                    this.MAPM.Pose(i).Orientation.Y,...
-                    this.MAPM.Pose(i).Orientation.X]),'ZYX');
+                q = eul2quat(deg2rad([this.PAM.poses(i).orientation.z,...
+                    this.PAM.poses(i).orientation.y,...
+                    this.PAM.poses(i).orientation.x]),'ZYX');
                 
                 % cree le vecteur pose
-                p = [this.MAPM.Pose(i).Position.X,...
-                    this.MAPM.Pose(i).Position.Y,...
-                    this.MAPM.Pose(i).Position.Z];
+                p = [this.PAM.poses(i).position.x,...
+                    this.PAM.poses(i).position.y,...
+                    this.PAM.poses(i).position.z];
                 
                 % transformer le point en fonction du frame
-                switch this.MAPM.Pose(i).Frame
+                switch this.PAM.poses(i).frame
                     
                     case 0 % position et angle absolue
                         this.quatList(i+this.icOffset,:) = this.qUtils.checkQuatFlip(q, this.quatList(i+this.icOffset-1,:));
                         this.pointList(i+this.icOffset,:) = p;
                         
                     case 1 % position et angle relatif
-                        this.quatList(i+this.icOffset,:) = this.qUtils.getQuatDir(this.quatList(i+this.icOffset-1,:), q, this.MAPM.Pose(i).Rotation);
+                        this.quatList(i+this.icOffset,:) = this.qUtils.getQuatDir(this.quatList(i+this.icOffset-1,:), q, this.PAM.poses(i).rotation);
                         this.pointList(i+this.icOffset,:) = this.pointList(i+this.icOffset-1,:) + this.qUtils.quatRotation(p,this.quatList(i+this.icOffset-1,:));
                         
                         
@@ -210,17 +212,17 @@ classdef TrajectoryGenerator < handle
                         this.pointList(i+this.icOffset,:) = this.pointList(i+this.icOffset-1,:) + this.qUtils.quatRotation(p,this.quatList(i+this.icOffset-1,:));
                         
                     case 3 % position absolue et angle relatif
-                        this.quatList(i+this.icOffset,:) = this.qUtils.getQuatDir(this.quatList(i+this.icOffset-1,:), q, this.MAPM.Pose(i).Rotation);
+                        this.quatList(i+this.icOffset,:) = this.qUtils.getQuatDir(this.quatList(i+this.icOffset-1,:), q, this.PAM.poses(i).rotation);
                         this.pointList(i+this.icOffset,:) = p;
                         
                     case 4 % z absolue et reste relatif
-                        this.quatList(i+this.icOffset,:) = this.qUtils.getQuatDir(this.quatList(i+this.icOffset-1,:), q, this.MAPM.Pose(i).Rotation);
+                        this.quatList(i+this.icOffset,:) = this.qUtils.getQuatDir(this.quatList(i+this.icOffset-1,:), q, this.PAM.poses(i).rotation);
                         this.pointList(i+this.icOffset,:) = this.pointList(i+this.icOffset-1,:) + this.qUtils.quatRotation(p,this.quatList(i+this.icOffset-1,:));
                         this.pointList(i+this.icOffset,3) = p(3);
                         
                     otherwise % Référentiel obstacles
                         
-                        [pObst,qObst] = getObstacleFrame(this,this.MAPM.Pose(i).Frame);
+                        [pObst,qObst] = getObstacleFrame(this,this.PAM.poses(i).frame);
                         
                         if this.status >= 0
                             q =quatmultiply(qObst, q);
@@ -234,13 +236,13 @@ classdef TrajectoryGenerator < handle
                 end
                 
                 % copier le parametre de vitesse
-                this.speedList(i + this.icOffset) = this.MAPM.Pose(i).Speed;
+                this.speedList(i + this.icOffset) = this.PAM.poses(i).speed;
                 
                 % determiner le yaw pour le vecteur course
                 this.courseList(i+this.icOffset) = this.getCourseAngle(this.quatList(i+this.icOffset,:));
                 
                 % verifier si faut arrondire la trajectoire.
-                if i>1 && this.MAPM.Pose(i-1).Fine ~=0
+                if i>1 && this.PAM.poses(i-1).fine ~=0
                     
                     [valid, p01, p12] = this.inscribedCircles(i+this.icOffset);
                     
@@ -289,7 +291,7 @@ classdef TrajectoryGenerator < handle
         function [p,q] = getObstacleFrame(this,id)
             
             % determiner le nombre d'obstacle
-            obstCount = max(size(this.obstacleData.Obstacles))
+            obstCount = max(size(this.obstacleData.obstacles));
             p = zeros(1,3);
             q = zeros(1,4);
             
@@ -297,16 +299,16 @@ classdef TrajectoryGenerator < handle
             if id  <= obstCount + this.obstacleOffset && id > this.obstacleOffset
                 
                 % check if obstacle is found
-                if this.obstacleData.Obstacles(id - this.obstacleOffset).IsValid
+                if this.obstacleData.obstacles(id - this.obstacleOffset).is_valid
                     
-                    p = [this.obstacleData.Obstacles(id - this.obstacleOffset).Pose.Position.X,...
-                        this.obstacleData.Obstacles(id - this.obstacleOffset).Pose.Position.Y,...
-                        this.obstacleData.Obstacles(id - this.obstacleOffset).Pose.Position.Z];
+                    p = [this.obstacleData.obstacles(id - this.obstacleOffset).pose.position.x,...
+                        this.obstacleData.obstacles(id - this.obstacleOffset).pose.position.y,...
+                        this.obstacleData.obstacles(id - this.obstacleOffset).pose.position.z];
                     
-                    q = [this.obstacleData.Obstacles(id - this.obstacleOffset).Pose.Orientation.W,...
-                        this.obstacleData.Obstacles(id - this.obstacleOffset).Pose.Orientation.X...
-                        this.obstacleData.Obstacles(id - this.obstacleOffset).Pose.Orientation.Y...
-                        this.obstacleData.Obstacles(id - this.obstacleOffset).Pose.Orientation.Z];
+                    q = [this.obstacleData.obstacles(id - this.obstacleOffset).pose.orientation.w,...
+                        this.obstacleData.obstacles(id - this.obstacleOffset).pose.orientation.x...
+                        this.obstacleData.obstacles(id - this.obstacleOffset).pose.orientation.y...
+                        this.obstacleData.obstacles(id - this.obstacleOffset).pose.orientation.z];
                 else
                     this.status = this.ERR_OBSTACLE_IS_NOT_DETECT;
                     fprintf('INFO : proc planner : Desired obstacle is not detected.\n');
@@ -341,7 +343,7 @@ classdef TrajectoryGenerator < handle
         
         function [status, p01, p12] = inscribedCircles(this,i)
             
-            R_Bar = this.MAPM.Pose(i- this.icOffset-1).Fine;
+            R_Bar = this.PAM.poses(i- this.icOffset-1).fine;
             
             % Si rayon positif calculer la courbe
             if R_Bar > 0
@@ -535,7 +537,7 @@ classdef TrajectoryGenerator < handle
             
             % Le parametre verif permet au constructeur de verifier si le mode existe sans interpoler.
             % Determiner le type d'imterpolation
-            switch this.MAPM.InterpolationMethod
+            switch this.PAM.interpolation_method
                 
                 case 0 % piecewise cubic interpolation
                     if~(verif)
@@ -577,50 +579,50 @@ classdef TrajectoryGenerator < handle
         function info = sendTrajectory(this, trajpub)
             
             % Initialiser le message trajectoire.
-            trajMsg = rosmessage('trajectory_msgs/MultiDOFJointTrajectoryPoint',"DataFormat","struct"); % message point
-            transformBuff  = rosmessage('geometry_msgs/Transform.msg',"DataFormat","struct"); % trajectoire
-            twistBuff = rosmessage('geometry_msgs/Twist.msg',"DataFormat","struct"); % trajectoire
+            trajMsg = ros2message('trajectory_msgs/MultiDOFJointTrajectoryPoint.msg'); % message point
+            transformBuff  = ros2message('geometry_msgs/Transform.msg'); % trajectoire
+            twistBuff = ros2message('geometry_msgs/Twist.msg'); % trajectoire
             
             % initialiser la dimention vecteur de points
-            trajMsg.Transforms = repelem(transformBuff,this.nbPoint).';
-            trajMsg.Velocities = repelem(twistBuff,this.nbPoint).';
-            trajMsg.Accelerations = repelem(twistBuff,this.nbPoint).';
+            trajMsg.transforms = repelem(transformBuff,this.nbPoint).';
+            trajMsg.velocities = repelem(twistBuff,this.nbPoint).';
+            trajMsg.accelerations = repelem(twistBuff,this.nbPoint).';
             
             % Remplire le message ROS
             for i=1 : this.nbPoint
                 
                 % Remplire le message Transform.
-                transformBuff.Translation.X = this.trajPosition(i,1);
-                transformBuff.Translation.Y = this.trajPosition(i,2);
-                transformBuff.Translation.Z = this.trajPosition(i,3);
+                transformBuff.translation.x = this.trajPosition(i,1);
+                transformBuff.translation.y = this.trajPosition(i,2);
+                transformBuff.translation.z = this.trajPosition(i,3);
                 
-                transformBuff.Rotation.W = this.trajQuat(i,1);
-                transformBuff.Rotation.X = this.trajQuat(i,2);
-                transformBuff.Rotation.Y = this.trajQuat(i,3);
-                transformBuff.Rotation.Z = this.trajQuat(i,4);
+                transformBuff.rotation.w = this.trajQuat(i,1);
+                transformBuff.rotation.x = this.trajQuat(i,2);
+                transformBuff.rotation.y = this.trajQuat(i,3);
+                transformBuff.rotation.z = this.trajQuat(i,4);
                 
-                trajMsg.Transforms(i) = transformBuff;
+                trajMsg.transforms(i) = transformBuff;
                 
                 % Remplire les vitesse
-                twistBuff.Linear.X = this.trajBodyVelocity(i,1);
-                twistBuff.Linear.Y = this.trajBodyVelocity(i,2);
-                twistBuff.Linear.Z = this.trajBodyVelocity(i,3);
+                twistBuff.linear.x = this.trajBodyVelocity(i,1);
+                twistBuff.linear.y = this.trajBodyVelocity(i,2);
+                twistBuff.linear.z = this.trajBodyVelocity(i,3);
                 
-                twistBuff.Angular.X = this.trajAngulairRates(i,1);
-                twistBuff.Angular.Y = this.trajAngulairRates(i,2);
-                twistBuff.Angular.Z = this.trajAngulairRates(i,3);
+                twistBuff.angular.x = this.trajAngulairRates(i,1);
+                twistBuff.angular.y = this.trajAngulairRates(i,2);
+                twistBuff.angular.z = this.trajAngulairRates(i,3);
                 
-                trajMsg.Velocities(i) = twistBuff;
+                trajMsg.velocities(i) = twistBuff;
                 
                 % Remplire les acceleration
-                twistBuff.Linear.X = this.trajLinearAcceleration(i,1);
-                twistBuff.Linear.Y = this.trajLinearAcceleration(i,2);
-                twistBuff.Linear.Z = this.trajLinearAcceleration(i,3);
+                twistBuff.linear.x = this.trajLinearAcceleration(i,1);
+                twistBuff.linear.y = this.trajLinearAcceleration(i,2);
+                twistBuff.linear.z = this.trajLinearAcceleration(i,3);
                 
-                twistBuff.Angular.X = this.trajAngularAcceleration(i,1);
-                twistBuff.Angular.Y = this.trajAngularAcceleration(i,2);
-                twistBuff.Angular.Z = this.trajAngularAcceleration(i,3);
-                trajMsg.Accelerations(i) = twistBuff;
+                twistBuff.angular.x = this.trajAngularAcceleration(i,1);
+                twistBuff.angular.y = this.trajAngularAcceleration(i,2);
+                twistBuff.angular.z = this.trajAngularAcceleration(i,3);
+                trajMsg.accelerations(i) = twistBuff;
                 
             end
             
@@ -645,14 +647,14 @@ classdef TrajectoryGenerator < handle
         function status = getInitialWaypoint(this,icMsg)
             
             % Replire les listes.
-            this.pointList(1,:) = [icMsg.Position.X,...
-                icMsg.Position.Y,...
-                icMsg.Position.Z];
+            this.pointList(1,:) = [icMsg.position.x,...
+                icMsg.position.y,...
+                icMsg.position.z];
             
-            this.quatList(1,:) = [icMsg.Orientation.W,...
-                icMsg.Orientation.X...
-                icMsg.Orientation.Y...
-                icMsg.Orientation.Z];
+            this.quatList(1,:) = [icMsg.orientation.w,...
+                icMsg.orientation.x...
+                icMsg.orientation.y...
+                icMsg.orientation.z];
             
             this.timeList(1) = 0;
             this.speedList(1) = 0;

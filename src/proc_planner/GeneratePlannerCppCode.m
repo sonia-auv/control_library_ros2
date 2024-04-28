@@ -2,7 +2,7 @@
 % Make sure to run this script in src/proc_planner folder.
 function GeneratePlannerCppCode(build)
 
-ROSWS = "~/sonia_ws/";
+ROSWS = "~/ros2_sonia_ws/";
 
 % add shared lib folder
 addpath("../shared_libraries/");
@@ -11,7 +11,7 @@ addpath("../shared_libraries/");
 cfg = coder.config('exe');
 cfg.TargetLang = "C++";
 cfg.GenCodeOnly = true;
-cfg.Hardware = coder.hardware('Robot Operating System (ROS)');
+cfg.Hardware = coder.hardware('Robot Operating System 2 (ROS 2)');
 cfg.BuildConfiguration = "Faster Runs";
 cfg.Hardware.BuildAction = 'none';
 
