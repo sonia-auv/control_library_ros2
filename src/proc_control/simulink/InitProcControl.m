@@ -1,7 +1,7 @@
 % Ce script initialise le simulink proc_control.
 
 %% Setup Environement
-
+node = ros2node("proc_control");
 % Regarder si le code est compiler ou si on roule en interprété
     if coder.target('MATLAB')
 
@@ -16,6 +16,7 @@
         setenv("AUV","AUV8");
 
     end
+
 %
 % Obtenir la variable d'environement du sub
     auv = getenv("AUV");
@@ -23,10 +24,11 @@
     switch auv
         case 'AUV8'
             [simulink, simulation, physics, kalman, MPC, mode] = ConfigAUV8();
-            system("rosparam load ./config/AUV8.yaml");
+            fprintf('INFO: Loading AUV8\n');
+            system("ros2 param load proc_control ./config/AUV8_copy.yaml");
         case 'AUV7'
             [simulink, simulation, physics, kalman, MPC, mode] = ConfigAUV7();
-            system("rosparam load ./config/AUV7.yaml");
+            system("ros2 param load proc_control ./config/AUV7.yaml");
         otherwise
             return;
     end
