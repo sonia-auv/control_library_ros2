@@ -1,7 +1,7 @@
 % Ce script initialise le simulink proc_control.
 
 %% Setup Environement
-node = ros2node("proc_control");
+
 % Regarder si le code est compiler ou si on roule en interprété
     if coder.target('MATLAB')
 
@@ -24,15 +24,19 @@ node = ros2node("proc_control");
     switch auv
         case 'AUV8'
             [simulink, simulation, physics, kalman, MPC, mode] = ConfigAUV8();
-            fprintf('INFO: Loading AUV8\n');
-            system("ros2 param load proc_control ./config/AUV8_copy.yaml");
+            % fprintf('INFO: Loading AUV8\n');
+            nodeParams = param_loader("config/AUV8.yaml");
+            [this.node] = ros2node("/proc_control", 8, Parameters=nodeParams);
+            % system("ros2 param load /proc_control ./config/AUV8_copy.yaml");
         case 'AUV7'
             [simulink, simulation, physics, kalman, MPC, mode] = ConfigAUV7();
-            system("ros2 param load proc_control ./config/AUV7.yaml");
+            nodeParams = param_loader("config/AUV7.yaml");
+            [this.node] = ros2node("/proc_control", 7, Parameters=nodeParams);
+            % system("ros2 param load proc_control ./config/AUV7.yaml");
         otherwise
             return;
     end
-
+    
   fprintf('INFO : proc control : Load model of %s. \n', auv);
 
 
