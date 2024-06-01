@@ -6,11 +6,11 @@
     if coder.target('MATLAB')
 
         clear;
-        % Regarder si le node ros matlab est actif
-       if ~ ros.internal.Global.isNodeActive
-            % partir le node ros matlab
-            %rosinit;
-        end
+       %  % Regarder si le node ros matlab est actif
+       % if ~ ros.internal.Global.isNodeActive
+       %      % partir le node ros matlab
+       %      %rosinit;
+       %  end
 
         % Definir AUV pour mode interprété
         setenv("AUV","AUV8");
@@ -38,7 +38,7 @@
     end
     
   fprintf('INFO : proc control : Load model of %s. \n', auv);
-
+  ros2genmsg("~/ros2_sonia_ws/src/sonia_common_ros2");
 
 %% Load BUS
     mpcParamsBus();
