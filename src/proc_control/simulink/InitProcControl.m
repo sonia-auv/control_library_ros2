@@ -25,12 +25,12 @@
         case 'AUV8'
             [simulink, simulation, physics, kalman, MPC, mode] = ConfigAUV8();
             % fprintf('INFO: Loading AUV8\n');
-            nodeParams = param_loader("config/AUV8.yaml");
+            nodeParams = readyaml("config/AUV8.yaml");
             node = ros2node("proc_control", 8, Parameters=nodeParams);
             % system("ros2 param load /proc_control ./config/AUV8_copy.yaml");
         case 'AUV7'
             [simulink, simulation, physics, kalman, MPC, mode] = ConfigAUV7();
-            nodeParams = param_loader("config/AUV7.yaml");
+            nodeParams = readyaml("config/AUV7.yaml");
             node = ros2node("proc_control", 7, Parameters=nodeParams);
             % system("ros2 param load proc_control ./config/AUV7.yaml");
         otherwise
