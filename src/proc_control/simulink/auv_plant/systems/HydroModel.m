@@ -16,7 +16,7 @@ classdef HydroModel < matlab.System
 
     % Pre-computed constants
     properties(Access = private)
-       pingerPosition = rosmessage('geometry_msgs/Vector3',"DataFormat","struct");
+       pingerPosition = ros2message('geometry_msgs/Vector3');
     end
 
     methods(Access = protected)
