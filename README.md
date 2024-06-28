@@ -57,9 +57,9 @@ The control library project use several toolboxes. Here is the list of the used 
 > - Model Predictive Control Toolbox                      
 > - Navigation Toolbox                                    
 > - Optimization Toolbox  
-> - robotoc system toolbox                             
+> - robotic system toolbox                             
 > - ROS Toolbox       
-> - Sensor usion and tracking toolbox
+> - Sensor Fusion and tracking toolbox
 > - Simulink Coder          
 > - Simulink compiler
 > - Symbolic Math Toolbox                             
