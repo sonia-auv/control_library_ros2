@@ -14,7 +14,7 @@
 
         % Definir AUV pour mode interprété
         setenv("AUV","AUV8");
-        setenv("ROS_DOMAIN_ID", "8");
+        %setenv("ROS_DOMAIN_ID", "8");
     end
 
 %
@@ -25,20 +25,20 @@
         case 'AUV8'
             [simulink, simulation, physics, kalman, MPC, mode] = ConfigAUV8();
             % fprintf('INFO: Loading AUV8\n');
-            nodeParams = readyaml("config/AUV8.yaml");
-            node = ros2node("proc_control", 8, Parameters=nodeParams);
+            %nodeParams = readyaml("config/AUV8.yaml");
+            %node = ros2node("proc_control", 8, Parameters=nodeParams);
             % system("ros2 param load /proc_control ./config/AUV8_copy.yaml");
         case 'AUV7'
             [simulink, simulation, physics, kalman, MPC, mode] = ConfigAUV7();
-            nodeParams = readyaml("config/AUV7.yaml");
-            node = ros2node("proc_control", 7, Parameters=nodeParams);
+            %nodeParams = readyaml("config/AUV7.yaml");
+            %node = ros2node("proc_control", 7, Parameters=nodeParams);
             % system("ros2 param load proc_control ./config/AUV7.yaml");
         otherwise
             return;
     end
     
   fprintf('INFO : proc control : Load model of %s. \n', auv);
-  ros2genmsg("~/ros2_sonia_ws/src/sonia_common_ros2");
+  %ros2genmsg("~/ros2_sonia_ws/src/sonia_common_ros2");
 
 %% Load BUS
     mpcParamsBus();
