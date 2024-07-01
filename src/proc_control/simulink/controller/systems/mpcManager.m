@@ -271,11 +271,11 @@
       % Support name-value pair arguments
       setProperties(obj,nargin,varargin{:});
      end
-    function validateInputsImpl(~, newRosGains, rosGains,mode,newReadCurrent,readCurrent, estimatedCurrent)
-       if  ~isstruct(rosGains)
-              error(message('simdemos:MLSysBlockMsg:BusInput'));
-       end
-
-    end
+    % function validateInputsImpl(~, newRosGains, rosGains,mode,newReadCurrent,readCurrent, estimatedCurrent)
+    %    if  ~isstruct(rosGains)
+    %           error(message('simdemos:MLSysBlockMsg:BusInput'));
+    %    end
+    % 
+    % end
     end
 end
