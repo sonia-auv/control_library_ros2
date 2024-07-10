@@ -102,9 +102,9 @@
 
             else % mode non trouver. retourne defaut
 
-                OV = mpcParams.gains.defaut.OV(1,1:this.mpcConst.nx);
-                MV = mpcParams.gains.defaut.MV(1,1:this.mpcConst.nu);
-                MVR = mpcParams.gains.defaut.MVR(1,1:this.mpcConst.nu);
+                OV = mpcParams.gains.default.OV(1,1:this.mpcConst.nx);
+                MV = mpcParams.gains.default.MV(1,1:this.mpcConst.nu);
+                MVR = mpcParams.gains.default.MVR(1,1:this.mpcConst.nu);
 
             end
 

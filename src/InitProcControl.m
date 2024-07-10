@@ -117,9 +117,9 @@
     Qmpcobj.Model.Nominal.U = MPC.Ui;
 
 % Définir les poids et gains
-    Qmpcobj.Weights.OutputVariables = MPC.gains.defaut.OV;
-    Qmpcobj.Weights.ManipulatedVariables = MPC.gains.defaut.MV;
-    Qmpcobj.Weights.ManipulatedVariablesRate = MPC.gains.defaut.MVR;
+    Qmpcobj.Weights.OutputVariables = MPC.gains.default.OV;
+    Qmpcobj.Weights.ManipulatedVariables = MPC.gains.default.MV;
+    Qmpcobj.Weights.ManipulatedVariablesRate = MPC.gains.default.MVR;
 
 % Ajout de contraintres au probleme d'optimisation
     Qmpcobj.MV = struct('Min',TMIN,'Max',TMAX);
@@ -152,9 +152,9 @@
     nlobj.Jacobian.StateFcn = MPC.JacobianFnc;
 
 % Définir les poids et gains
-    nlobj.Weights.OutputVariables = MPC.gains.defaut.OV;
-    nlobj.Weights.ManipulatedVariables = MPC.gains.defaut.MV;
-    nlobj.Weights.ManipulatedVariablesRate = MPC.gains.defaut.MVR;
+    nlobj.Weights.OutputVariables = MPC.gains.default.OV;
+    nlobj.Weights.ManipulatedVariables = MPC.gains.default.MV;
+    nlobj.Weights.ManipulatedVariablesRate = MPC.gains.default.MVR;
 
 % Ajout de contraintres au probleme d'optimisation
     nlobj.MV = struct('Min',TMIN,'Max',TMAX);
