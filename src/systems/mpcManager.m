@@ -39,9 +39,9 @@
             this.gainsList = zeros(20, (this.mpcConst.nx + 2*this.mpcConst.nu + 1));
 
             %initialiser les gains debug
-            this.rosOV = this.mpcConst.gains.defaut.OV;
-            this.rosMV = this.mpcConst.gains.defaut.MV;
-            this.rosMVR = this.mpcConst.gains.defaut.MVR;
+            this.rosOV = this.mpcConst.gains.default.OV;
+            this.rosMV = this.mpcConst.gains.default.MV;
+            this.rosMVR = this.mpcConst.gains.default.MVR;
 
         end
 
@@ -81,30 +81,30 @@
         end
 
         %% Fonction qui détermine les gain
-        function [OV, MV, MVR]= getMpcWeigth(this, mode, q, mpcParams)
+        function [ov, mv, mvr]= getMpcWeigth(this, mode, q, mpcParams)
 
           % Vérifier si le mode existe
             corr = this.gainsList(:,1) == mode;
 
             if mode == this.mode.control.rosGains % Mode ros debug
 
-                OV = this.rosOV(1,1:this.mpcConst.nx);
-                MV = this.rosMV(1,1:this.mpcConst.nu);
-                MVR = this.rosMVR(1,1:1:this.mpcConst.nu);
+                ov = this.rosOV(1,1:this.mpcConst.nx);
+                mv = this.rosMV(1,1:this.mpcConst.nu);
+                mvr = this.rosMVR(1,1:1:this.mpcConst.nu);
 
 
             elseif sum(corr) == 1 % mode existe et unique
 
                 i = sum(find(corr == 1));
-                OV = this.gainsList(i,2:14);
-                MV = this.gainsList(i,15:22);
-                MVR = this.gainsList(i,23:30);
+                ov = this.gainsList(i,2:14);
+                mv = this.gainsList(i,15:22);
+                mvr = this.gainsList(i,23:30);
 
-            else % mode non trouver. retourne defaut
-
-                OV = mpcParams.gains.default.OV(1,1:this.mpcConst.nx);
-                MV = mpcParams.gains.default.MV(1,1:this.mpcConst.nu);
-                MVR = mpcParams.gains.default.MVR(1,1:this.mpcConst.nu);
+            else % mode non trouver. retourne default
+                
+                ov = mpcParams.gains.default.OV(1,1:this.mpcConst.nx);
+                mv = mpcParams.gains.default.MV(1,1:this.mpcConst.nu);
+                mvr = mpcParams.gains.default.MVR(1,1:this.mpcConst.nu);
 
             end
 
@@ -113,7 +113,7 @@
 
             if(e(2) > deg2rad(20) || e(3) > deg2rad(20)) % If roll pitch exeed 20deg
 
-                MV = mpcParams.gains.noDvl.MV;
+                mv = mpcParams.gains.noDvl.MV;
 
             end
 
@@ -165,16 +165,16 @@
 
           if newRosGains
 
-              if rosGains.OV_SL_Info.CurrentLength == this.mpcConst.nx % regarder la vaiditée des ov
-                  this.rosOV = rosGains.OV(1:this.mpcConst.nx,1).';
+              if rosGains.ov_SL_Info.CurrentLength == this.mpcConst.nx % regarder la vaiditée des ov
+                  this.rosOV = rosGains.ov(1:this.mpcConst.nx,1).';
               end
 
-              if rosGains.MV_SL_Info.CurrentLength == this.mpcConst.nu % regarder la vaiditée des mv
-                  this.rosMV = rosGains.MV(1:this.mpcConst.nu,1).';
+              if rosGains.mv_SL_Info.CurrentLength == this.mpcConst.nu % regarder la vaiditée des mv
+                  this.rosMV = rosGains.mv(1:this.mpcConst.nu,1).';
               end
 
-              if rosGains.MVR_SL_Info.CurrentLength == this.mpcConst.nu % regarder la vaiditée des mvr
-                  this.rosMVR = rosGains.MVR(1:this.mpcConst.nu,1).';
+              if rosGains.mvr_SL_Info.CurrentLength == this.mpcConst.nu % regarder la vaiditée des mvr
+                  this.rosMVR = rosGains.mvr(1:this.mpcConst.nu,1).';
               end
           end
 
