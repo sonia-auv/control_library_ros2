@@ -184,7 +184,7 @@ assignin('base','Default', Defaut);
 % Bus object: Gains 
 clear elems;
 elems(1) = Simulink.BusElement;
-elems(1).Name = 'default';
+elems(1).Name = 'predefined';
 elems(1).Dimensions = 1;
 elems(1).DimensionsMode = 'Fixed';
 elems(1).DataType = 'Default';

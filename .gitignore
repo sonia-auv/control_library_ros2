@@ -1,1 +1,7 @@
 slprj
+proc_control_ert_rtw
+build
+install
+log
+src/proc_control
+src/sonia_common_ros2
