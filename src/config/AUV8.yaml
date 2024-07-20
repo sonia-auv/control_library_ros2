@@ -72,31 +72,31 @@ proc_control:
     # Iyx Iyy Iyz
     # Izx Izy Izz
     # This matrix is define with solidwork.
-    I: "0.5020, -0.0013, -0.0094, -0.0013, 1.5266, -0.0021, -0.0094, -0.0021, 1.6682"
+    I: [0.5020, -0.0013, -0.0094, -0.0013, 1.5266, -0.0021, -0.0094, -0.0021, 1.6682]
     # Center of mass              x     y     z
     # This vector is define with solidwork.
-    rg: "0.0028, 0.0001, 0.0222" # distance (m) between center of mass and the geometric center of the sub.
+    rg: [0.0028, 0.0001, 0.0222] # distance (m) between center of mass and the geometric center of the sub.
 
     # Center of boyency           x     y     z
     # This vector is define with solidwork.
-    rb: "0.003, -0.0002, 0.021" # distance (m) between center of boyency and the geometric center of the sub.
+    rb: [0.003, -0.0002, 0.021] # distance (m) between center of boyency and the geometric center of the sub.
 
     # Drag linear constants
     # This vector is guess
-    cdl: "15, 20, 23.3, 3.33, 2.33, 5" # dimensionless
+    cdl: [15, 20, 23.3, 3.33, 2.33, 5] # dimensionless
 
     # Drag quadratic constants
     # This vector is guess
-    cdq: "1.17, 0.82, 0.756, 0.167, 0.1, 0.102" # dimensionless
+    cdq: [1.17, 0.82, 0.756, 0.167, 0.1, 0.102] # dimensionless
 
     # Added mass
     # This vector is guess
-    added_mass: "-1.4648, -6.6156, -15.7695, -0.1164, -0.3493, -0.3493" # dimensionless
+    added_mass: [-1.4648, -6.6156, -15.7695, -0.1164, -0.3493, -0.3493] # dimensionless
 
     # thusters definition
     # each row reprensent a thurster and each colunm reprensent an DOF
     #                                    x      y      z    yaw  roll pitch
-    thrusters: "0.292, 0.173, 0.082, -45,-90, 0; -0.292, 0.173, 0.082, 45,-90, 0;-0.292, -0.173, 0.082,-45,-90, 0;0.292, -0.173, 0.082, 45,-90, 0;0.181, 0.159, 0.082,  0,  0, 0;-0.181, 0.159, 0.082,  0,180, 0;-0.181, -0.159, 0.082,  0,  0, 0;0.181, -0.159, 0.082,  0,180, 0"
+    thrusters: "0.292, 0.173, 0.082, -45,-90, 0,-0.292, 0.173, 0.082, 45,-90, 0,-0.292, -0.173, 0.082,-45,-90, 0,0.292, -0.173, 0.082, 45,-90, 0,0.181, 0.159, 0.082,  0,  0, 0,-0.181, 0.159, 0.082,  0,180, 0,-0.181, -0.159, 0.082,  0,  0, 0,0.181, -0.159, 0.082,  0,180, 0"
 
     # Sensors Definition
     #---------------------------------------------------------------------------------------------------------
