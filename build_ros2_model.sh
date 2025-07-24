@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright 2020-2021 The MathWorks, Inc.
+# Copyright 2020-2024 The MathWorks, Inc.
 
 ARCHIVE="$1"
 ROS2_WS="$2"
@@ -91,8 +91,8 @@ if [ $VALID_ZIP -ne 0 ] ; then
 fi
 
 # Check for one of the standard files generated from Simulink
-# (ros2nodeinterface.cpp)
-tar ztf "$ARCHIVE" | grep -q -E -- 'main|ros2nodeinterface'.cpp 2> /dev/null
+# (ros2nodeinterface.cpp or main.cpp or <modelname>_ctrlr_host.cpp)
+tar ztf "$ARCHIVE" | grep -q -E -- 'main|ros2nodeinterface|*_ctrlr_host'.cpp 2> /dev/null
 VALID_CODEGEN_ARCHIVE=$?
 if [ $VALID_CODEGEN_ARCHIVE -ne 0 ] ; then
    echo "The archive, "$ARCHIVE", is not a valid archive (.tgz file) of files generated from Simulink/MATLAB Coder."
