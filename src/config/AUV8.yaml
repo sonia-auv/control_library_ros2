@@ -105,6 +105,8 @@ proc_control:
     # (If set to FALSE' when dvl is lost Kalman will use the theorectical model)
     dvl_lost_override: TRUE # Boolean
 
+    has_dvl: TRUE
+
     # transformation of the DVL frame to body frame
     dvl_rotation: "0, 3.14159265359, 1.57079632679" # rad
 

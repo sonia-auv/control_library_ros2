@@ -2,8 +2,16 @@ auv = getenv("AUV");
 modelName="proc_control";
 switch auv
         case 'AUV8'
-            fprintf("Loading Params!!\n");
+            fprintf("Loading Params for AUV8!!\n");
             nodeParams = readyaml("config/AUV8.yaml");
+            
+            %ros2node(simNodeName, 8, Parameters=nodeParams);
+            %ros2node(modelName, 8, Parameters=nodeParams);
+            % system("ros2 param load /proc_control ./config/AUV8_copy.yaml");
+
+        case 'LITE1'
+            fprintf("Loading Params for LITE1!!\n");
+            nodeParams = readyaml("config/LITE1.yaml");
             
             %ros2node(simNodeName, 8, Parameters=nodeParams);
             %ros2node(modelName, 8, Parameters=nodeParams);

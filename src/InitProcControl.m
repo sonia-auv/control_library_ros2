@@ -13,7 +13,7 @@
        %  end
 
         % Definir AUV pour mode interprété
-        setenv("AUV","AUV8");
+        setenv("AUV","LITE1");
         setenv("ROS_DOMAIN_ID", "11");
     end
 
@@ -30,6 +30,11 @@
             % system("ros2 param load /proc_control ./config/AUV8_copy.yaml");
         case 'AUV7'
             [simulink, simulation, physics, kalman, MPC, mode] = ConfigAUV7();
+            %nodeParams = readyaml("config/AUV7.yaml");
+            %node = ros2node("proc_control", 7, Parameters=nodeParams);
+            % system("ros2 param load proc_control ./config/AUV7.yaml");
+       case 'LITE1'
+            [simulink, simulation, physics, kalman, MPC, mode] = ConfigLITE1();
             %nodeParams = readyaml("config/AUV7.yaml");
             %node = ros2node("proc_control", 7, Parameters=nodeParams);
             % system("ros2 param load proc_control ./config/AUV7.yaml");

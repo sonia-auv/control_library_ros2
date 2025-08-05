@@ -61,6 +61,8 @@ function [simulink, simulation, physics, kalman, MPC, mode] = ConfigAUV8()
 
    % Approximate 1st order tansfert function of the thruster 1 / (tau*s + 1)
    physics.thruster.tau = 0.10;
+
+   physics.has_dvl = true;
 %% MPC
    % MPC parameters
        MPC.nx = 13; % Number of states
@@ -147,9 +149,9 @@ function [simulink, simulation, physics, kalman, MPC, mode] = ConfigAUV8()
         kalman.Cx = 100;
 
     % Covariences des capteurs
-        kalman.Cimu = [0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01];
+        kalman.Cimu = [0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.1, 0.1, 0.1];
         kalman.Cdvl = ones(1,3)*0.01;
-        kalman.Cdepth = [0.1];
+        kalman.Cdepth = [0.01];
   %% Paramèetre de Simulation
    % Gazebo
        simulation.gazebo.sampletime = simulink.sampletime;
