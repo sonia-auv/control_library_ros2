@@ -148,7 +148,7 @@ function [simulink, simulation, physics, kalman, MPC, mode] = ConfigLITE1()
         kalman.Cx = 100;
 
     % Covariences des capteurs
-        kalman.Cimu = [0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.1, 0.1, 0.1];
+        kalman.Cimu = [0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01];
         kalman.Cdvl = ones(1,3)*0.01;
         kalman.Cdepth = [0.1];
   %% Paramèetre de Simulation
