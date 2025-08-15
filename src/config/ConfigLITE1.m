@@ -1,4 +1,4 @@
-function [simulink, simulation, physics, kalman, MPC, mode] = ConfigLITE1()
+function [simulink, simulation, physics, kalman, MPC, mode, sensors] = ConfigLITE1()
 
 %% Paramètre simulink
     simulink.sampletime = 1/50;
@@ -61,7 +61,11 @@ function [simulink, simulation, physics, kalman, MPC, mode] = ConfigLITE1()
 
    % Approximate 1st order tansfert function of the thruster 1 / (tau*s + 1)
    physics.thruster.tau = 0.10;
-   physics.has_dvl = false;
+   sensors.has_dvl = false;
+   sensors.imu_VN_linear_accel_bias = [0, 0, -10.29];
+   sensors.imu_VN_accel_thresh = [0.1, 0.1, 0.1];
+   sensors.imu_ZED_linear_accel_bias = [0, 0, -9.79];
+   sensors.imu_ZED_accel_thresh = [0.1, 0.1, 0.1];
 %% MPC
    % MPC parameters
        MPC.nx = 13; % Number of states
@@ -148,9 +152,10 @@ function [simulink, simulation, physics, kalman, MPC, mode] = ConfigLITE1()
         kalman.Cx = 100;
 
     % Covariences des capteurs
-        kalman.Cimu = [0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01];
-        kalman.Cdvl = ones(1,3)*0.01;
-        kalman.Cdepth = [0.1];
+        kalman.Cimu = [0.01, 0.01, 0.01, 0.01, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1];
+        kalman.CimuZed = [0.01, 0.01, 0.01, 0.01, 0.01, 0.01];
+        kalman.Cdvl = ones(1,3)*0.1;
+        kalman.Cdepth = [0.1 0.01];
   %% Paramèetre de Simulation
    % Gazebo
        simulation.gazebo.sampletime = simulink.sampletime;

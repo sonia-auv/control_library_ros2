@@ -583,17 +583,6 @@ elems(17).Max = [];
 elems(17).DocUnits = '';
 elems(17).Description = '';
 
-elems(18) = Simulink.BusElement;
-elems(18).Name = 'has_dvl';
-elems(18).Dimensions = [1 1];
-elems(18).DimensionsMode = 'Fixed';
-elems(18).DataType = 'uint8';
-elems(18).Complexity = 'real';
-elems(18).Min = [];
-elems(18).Max = [];
-elems(18).DocUnits = '';
-elems(18).Description = '';
-
 physicsConstants = Simulink.Bus;
 physicsConstants.HeaderFile = '';
 physicsConstants.Description = '';

@@ -105,8 +105,6 @@ proc_control:
     # (If set to FALSE' when dvl is lost Kalman will use the theorectical model)
     dvl_lost_override: TRUE # Boolean
 
-    has_dvl: False
-
     # transformation of the DVL frame to body frame
     dvl_rotation: "0, 3.14159265359, 1.57079632679" # rad
 
@@ -118,3 +116,7 @@ proc_control:
 
     # depth sensor distance according to the geometric center
     depth_pose: "0.0, -0.136, 0.178" # m
+
+  sensors:
+    has_dvl: FALSE
+    linear_acceleration_bias: "0.0, 0.0, -10.165871670815797"

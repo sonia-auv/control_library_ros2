@@ -109,3 +109,6 @@ proc_control:
     # sonar distance acording to auv center
     sonar_pose: "0.0, 0.0, 0.0" # m
 
+  sensors:
+    has_dvl: TRUE
+    linear_acceleration_bias: "0.0, 0.0, -9.59066"

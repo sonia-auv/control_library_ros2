@@ -1,4 +1,4 @@
-function [simulink, simulation, physics, kalman, MPC, mode] = ConfigAUV8()
+function [simulink, simulation, physics, kalman, MPC, mode, sensors] = ConfigAUV8()
 
 %% Paramètre simulink
     simulink.sampletime = 1/50;
@@ -62,7 +62,9 @@ function [simulink, simulation, physics, kalman, MPC, mode] = ConfigAUV8()
    % Approximate 1st order tansfert function of the thruster 1 / (tau*s + 1)
    physics.thruster.tau = 0.10;
 
-   physics.has_dvl = true;
+   sensors.has_dvl = true;
+   sensors.linear_accel_bias = [0,0,-9.59066];
+
 %% MPC
    % MPC parameters
        MPC.nx = 13; % Number of states
