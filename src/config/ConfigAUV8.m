@@ -150,6 +150,10 @@ function [simulink, simulation, physics, kalman, MPC, mode] = ConfigAUV8()
         kalman.Cimu = [0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01];
         kalman.Cdvl = ones(1,3)*0.01;
         kalman.Cdepth = [0.1];
+        kalman.Cslam = [0.01 0.01 0.1 ...
+                        0.01 0.01 0.01 0.01 ...
+                        0.01 0.01 0.01 ...
+                        0.01 0.01 0.01];
   %% Paramèetre de Simulation
    % Gazebo
        simulation.gazebo.sampletime = simulink.sampletime;
