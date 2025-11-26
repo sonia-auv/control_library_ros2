@@ -13,8 +13,8 @@
        %  end
 
         % Definir AUV pour mode interprété
-        setenv("AUV","LITE1");
-        setenv("ROS_DOMAIN_ID", "11");
+        setenv("AUV","AUV8");
+        setenv("ROS_DOMAIN_ID", "8");
     end
 
 %
