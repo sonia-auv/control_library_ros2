@@ -65,10 +65,10 @@ function [simulink, simulation, physics, kalman, MPC, mode, sensors] = ConfigAUV
    sensors.has_dvl = false;
    sensors.imu_VN_pos = [-0.00277 0 0.06591];
    sensors.imu_ZED_pos = [0.39591 0.0 0.0];
-   sensors.imu_VN_linear_accel_bias = [0, 0, -10.29];
+   sensors.imu_VN_linear_accel_bias = [0, 0, -9.45];
    sensors.imu_VN_accel_thresh = [0.1, 0.1, 0.1];
-   sensors.imu_ZED_linear_accel_bias = [0, 0, -9.59066];
-   sensors.imu_ZED_accel_thresh = [0.1, 0.1, 0.1];
+   sensors.imu_ZED_linear_accel_bias = [-0.01, -0.1, -9.98];
+   sensors.imu_ZED_accel_thresh = [0.1, 0.2, 0.1];
 
 %% MPC
    % MPC parameters
@@ -156,9 +156,10 @@ function [simulink, simulation, physics, kalman, MPC, mode, sensors] = ConfigAUV
         kalman.Cx = 100;
 
     % Covariences des capteurs
-        kalman.Cimu = [0.01, 0.01, 0.01, 0.01, ...  % Quaternion w, x, y, z
+        kalman.Cimu = [0.1, 0.1, 0.1, 0.1 ...  % Quaternion w, x, y, z
                        0.1, 0.1 ...            % Linear Velocity x, y, z NOTE THIS IS AN INTEGRATION
-                       0.01, 0.01 0.01];               % Angluar Velocity x, y, z 
+                       0.01, 0.01 0.01...
+                       ];               % Angluar Velocity x, y, z 
         
         kalman.CimuZed = [0.1, 0.1 ...     % Linear Velocity x, y, z NOTE THIS IS AN INTEGRATION
                           0.01, 0.01 0.01];         % Angluar Velocity x, y, z 
