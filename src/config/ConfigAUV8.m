@@ -68,7 +68,7 @@ function [simulink, simulation, physics, kalman, MPC, mode, sensors] = ConfigAUV
    sensors.imu_VN_linear_accel_bias = [0, 0, -9.45];
    sensors.imu_VN_accel_thresh = [0.1, 0.1, 0.1];
    sensors.imu_ZED_linear_accel_bias = [-0.01, -0.1, -9.98];
-   sensors.imu_ZED_accel_thresh = [0.1, 0.2, 0.1];
+   sensors.imu_ZED_accel_thresh = [0.22, 0.25, 0.1];
 
 %% MPC
    % MPC parameters
@@ -156,17 +156,17 @@ function [simulink, simulation, physics, kalman, MPC, mode, sensors] = ConfigAUV
         kalman.Cx = 100;
 
     % Covariences des capteurs
-        kalman.Cimu = [0.1, 0.1, 0.1, 0.1 ...  % Quaternion w, x, y, z
-                       0.1, 0.1 ...            % Linear Velocity x, y, z NOTE THIS IS AN INTEGRATION
-                       0.01, 0.01 0.01...
+        kalman.Cimu = [0.1, 0.1, 0.1, 0.1, ... Quaternion w, x, y, z
+                       0.1, 0.1, ...           Linear Velocity x, y, z NOTE THIS IS AN INTEGRATION
+                       0.01, 0.01, 0.01...
                        ];               % Angluar Velocity x, y, z 
         
-        kalman.CimuZed = [0.1, 0.1 ...     % Linear Velocity x, y, z NOTE THIS IS AN INTEGRATION
-                          0.01, 0.01 0.01];         % Angluar Velocity x, y, z 
+        kalman.CimuZed = [1.0, 1.0, ...     % Linear Velocity x, y, z NOTE THIS IS AN INTEGRATION
+                          0.1, 0.1, 0.1];         % Angluar Velocity x, y, z 
         
         kalman.Cdvl = ones(1,3)*0.1;                % Linear Velocity x, y, z
 
-        kalman.Cdepth = [0.001 ...                    % Position z
+        kalman.Cdepth = [0.001, ...                    % Position z
                          0.01];                     % Linear Velocity z NOTE THIS IS A DERIVATION
 
   %% Paramèetre de Simulation
