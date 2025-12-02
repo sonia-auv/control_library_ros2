@@ -1,0 +1,75 @@
+classdef SlamFreshCheck < matlab.System
+    %SLAMFRESHCHECK Summary of this class goes here
+    %   Detailed explanation goes here
+    
+    properties (Nontunable)
+        timeoutCounter =3;
+    end
+
+    properties (DiscreteState)
+        mEnabledFlag
+        mInternalCounter
+    end
+
+    properties (Access = private)
+    end
+    methods (Access = protected)
+
+        function resetImpl(this)
+            this.mEnabledFlag=false;
+            this.mInternalCounter=0;
+        end
+        
+        function setupImpl(~)
+
+        end
+
+        function isEnabled = stepImpl(this, isNew)
+            if isNew == this.mEnabledFlag
+            elseif this.mEnabledFlag
+                this.mInternalCounter = this.mInternalCounter + 1;
+                if this.mInternalCounter > 3
+                    this.mEnabledFlag = false;
+                end
+            else
+                this.mEnabledFlag = true;
+                this.mInternalCounter = 0;
+            end
+            isEnabled = this.mEnabledFlag;
+        end
+
+        %% Output type definitions
+        function isEnabled = getOutputSizeImpl(~)
+            isEnabled = [1 1];
+        end 
+
+        function isEnabled  = isOutputFixedSizeImpl(~)
+            isEnabled = true;
+        end 
+
+        function isEnabled = getOutputDataTypeImpl(~)
+            isEnabled = "logical";
+        end
+
+        function isEnabled = isOutputComplexImpl(~)
+            % Return true for each output port with complex data
+            isEnabled = false;
+
+            % Example: inherit complexity from first input port
+            % out = propagatedInputComplexity(obj,1);
+        end
+
+        function [sz,dt,cp] = getDiscreteStateSpecificationImpl(this, name)
+             if strcmp(name,'mEnabledFlag')
+                  sz = [1 1];
+                  dt = "logical";
+                  cp = false;
+             elseif strcmp(name,'mInternalCounter')
+                  sz = [1 1];
+                  dt = "double";
+                  cp = false;
+             end
+        end
+    end
+end
+
