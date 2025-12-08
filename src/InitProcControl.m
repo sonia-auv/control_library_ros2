@@ -40,6 +40,7 @@
   fprintf('INFO : proc control : Load model of %s. \n', auv);
   %ros2genmsg("~/ros2_sonia_ws/src/sonia_common_ros2");
 
+
 %% Load BUS
     mpcParamsBus();
     physicsConstantsBus();
