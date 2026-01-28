@@ -25,7 +25,7 @@ function xk = EkfNavStatesEq(x,inputs)
     end
 
     % prendre la matrice M
-    [M,~,~,~] = AUVModelMatrices(x,constValues);
+    [M,~,~,~] = AUVModelMatrices(x(1:13),constValues);
 
     % M inverse * Tm
     Bc = [zeros(7,nu) ; M\Tm];
@@ -34,8 +34,6 @@ function xk = EkfNavStatesEq(x,inputs)
     M = 2;
     Ts =0.02 / M;
     xk = x;
-
-    x_dot_kk = zeros(13,1);
 
      for i=1:M
     %     % X(k+1) = A(xk)*xk + B*xk
@@ -48,7 +46,7 @@ function xk = EkfNavStatesEq(x,inputs)
     xk=  xk + (AUVQuatPerturbedSimFcn(xk,zeros(6,1),constValues) + Bc*u.') * Ts;
     % correct Quaternion
      xk(4:7)=quatUtilities.quatNorm(xk(4:7));
-    end
+     end
 
 end
 
