@@ -21,12 +21,13 @@ classdef ZUPT < matlab.System
             this.staticTicks = 0;
         end
         function setupImpl(this)
+            this.staticTicks = 0;
         end
 
         %% Step Function
         function [isStatic] = stepImpl(this, accel, gyro, pwm)
             %stepImpl Function that executes 
-            if all(pwm(1:4) > this.pwmUpperLimit) && all(pwm(1:4) < this.pwmLowerLimit) ...
+            if all(pwm(1:4) > this.thrusterNewtonUpperLimit) && all(pwm(1:4) < this.thrusterNewtonLowerLimit) ...
                 && all(abs(accel) < this.accelLimit) && all(abs(gyro) < this.gyroLimit) ...
                 && this.staticTicks * this.sampleTime <= this.staticWindow
                 
