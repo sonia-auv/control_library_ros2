@@ -34,7 +34,7 @@
             %node = ros2node("proc_control", 7, Parameters=nodeParams);
             % system("ros2 param load proc_control ./config/AUV7.yaml");
        case 'LITE1'
-            [simulink, simulation, physics, kalman, MPC, mode, sensors] = ConfigLITE1();
+            [simulink, simulation, physics, kalman, MPC, mode, sensors, accel_conversion] = ConfigLITE1();
             %nodeParams = readyaml("config/AUV7.yaml");
             %node = ros2node("proc_control", 7, Parameters=nodeParams);
             % system("ros2 param load proc_control ./config/AUV7.yaml");

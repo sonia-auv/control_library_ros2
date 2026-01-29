@@ -18,27 +18,47 @@ classdef ZUPT < matlab.System
     methods (Access=protected)
         %% Reset and Setup Functions
         function resetImpl(this)
-            this.staticTicks = 0;
+            this.staticTicks = uint8(0);
         end
         function setupImpl(this)
-            this.staticTicks = 0;
+            this.staticTicks = uint8(0);
         end
 
         %% Step Function
-        function [isStatic] = stepImpl(this, accel, gyro, pwm)
+        function [isStatic] = stepImpl(this, accel, gyro, thrusterNewton)
             %stepImpl Function that executes 
-            if all(pwm(1:4) > this.thrusterNewtonUpperLimit) && all(pwm(1:4) < this.thrusterNewtonLowerLimit) ...
-                && all(abs(accel) < this.accelLimit) && all(abs(gyro) < this.gyroLimit) ...
-                && this.staticTicks * this.sampleTime <= this.staticWindow
-                
+
+            if this.checkNewtonThrust(thrusterNewton)...
+                    && this.checkSensor(accel, this.accelLimit)...
+                    && this.checkSensor(gyro, this.gyroLimit)...
+                    && this.staticTicks * this.staticWindow <= this.staticWindow
                 this.staticTicks = this.staticTicks + 1;
-
             else
-                this.staticTicks = 0;
-
+                this.staticTicks = uint8(0);
             end
 
-            isStatic = this.staticTicks * this.sampleTime > this.staticWindow;
+            isStatic = double(this.staticTicks) * this.sampleTime > this.staticWindow;
+        end
+
+        function flag = checkNewtonThrust(this, thrust)
+            flag = true;
+            for i=1:4
+                if thrust(i) > this.thrusterNewtonUpperLimit(i)...
+                        || thrust(i) < this.thrusterNewtonLowerLimit(i)
+                    flag = false;
+                    break;
+                end
+            end
+        end
+
+        function flag = checkSensor(~, sensor, thresh)
+            flag = true;
+            for i=1:3
+                if abs(sensor(i)) > thresh(i)
+                    flag = false;
+                    break;
+                end
+            end
         end
     
         %% Output Datatypes definitions
@@ -57,12 +77,10 @@ classdef ZUPT < matlab.System
         function [sz,dt,cp] = getDiscreteStateSpecificationImpl(this,name)
             if strcmp(name,'staticTicks')
                  sz = 1;
-                 dt = "int8";
+                 dt = "uint8";
                  cp = false;
             end
-        end
-        
-        
+        end 
     end
 end
 

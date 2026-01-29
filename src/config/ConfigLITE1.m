@@ -1,4 +1,4 @@
-function [simulink, simulation, physics, kalman, MPC, mode, sensors] = ConfigLITE1()
+function [simulink, simulation, physics, kalman, MPC, mode, sensors, accel_conversion] = ConfigLITE1()
 
 %% Paramètre simulink
     simulink.sampletime = 1/50;
@@ -211,6 +211,25 @@ function [simulink, simulation, physics, kalman, MPC, mode, sensors] = ConfigLIT
         simulation.drift.ts = 5;
 
 
+    %% Accel Conversion Constants
+    % There are 9 states accel_x, accel_y, accel_z,
+    %                    accel_bias_x, accel_bias_y, accel_bias_z,
+    %                    vel_x, vel_y, vel_z
+        accel_conversion.initial_values = zeros(1,9);
+        accel_conversion.initial_covariance = [10 10 10 10 10 10 10 10 10];
+        accel_conversion.VectorNav_accel_covariance = [1 1 1];
+        accel_conversion.ZED_accel_covariance = [3 3 3];
 
-    end
+        accel_conversion.static_window = 0.5;
+        accel_conversion.NewtonUpperLimit = [2 2 2 2];
+        accel_conversion.NewtonLowerLimit = [-2 -2 -2 -2];
+        
+        accel_conversion.VectorNav_accel_bounds = [0.1 0.1 0.1];
+        accel_conversion.VectorNav_gyro_bounds = [0.05 0.05 0.05];
+
+        accel_conversion.ZED_accel_bounds = [0.1 0.1 0.1];
+        accel_conversion.ZED_gyro_bounds = [0.05 0.05 0.05];
+
+
+end
 
