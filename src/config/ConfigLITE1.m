@@ -64,8 +64,10 @@ function [simulink, simulation, physics, kalman, MPC, mode, sensors, accel_conve
    
    
    sensors.has_dvl = false;
+   sensors.imu_VN_pos = [0 0 0.107];
    sensors.imu_VN_linear_accel_bias = [0, 0, -10.29];
    sensors.imu_VN_accel_thresh = [0.1, 0.1, 0.1];
+   sensors.imu_ZED_pos = [0.14715 -0.03 0.03522];
    sensors.imu_ZED_linear_accel_bias = [0, 0, -9.79];
    sensors.imu_ZED_accel_thresh = [0.1, 0.1, 0.1];
    
@@ -219,10 +221,10 @@ function [simulink, simulation, physics, kalman, MPC, mode, sensors, accel_conve
     % There are 9 states accel_x, accel_y, accel_z,
     %                    accel_bias_x, accel_bias_y, accel_bias_z,
     %                    vel_x, vel_y, vel_z
-        accel_conversion.initial_values = zeros(1,9);
-        accel_conversion.initial_covariance = [10 10 10 10 10 10 10 10 10];
-        accel_conversion.VectorNav_accel_covariance = [1 1 1];
-        accel_conversion.ZED_accel_covariance = [3 3 3];
+        accel_conversion.initial_values = zeros(1,16);
+        accel_conversion.initial_covariance = ones(1,16) * 10;
+        accel_conversion.VectorNav_accel_covariance = [1 1 1 1 1 1 1 1 1 1];
+        accel_conversion.ZED_accel_covariance = [3 3 3 3 3 3];
 
         accel_conversion.static_window = 0.5;
         accel_conversion.NewtonUpperLimit = [2 2 2 2];

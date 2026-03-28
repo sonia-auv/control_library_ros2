@@ -2,7 +2,7 @@ function xk = SubEkfVelCalc(x, inputs)
 % Tiny velocity stabilizer EKF - state transition
 %
 % State:
-%   x = [v_n(3); b_a(3)]
+%   x = [orr_n(4); w_n(3); a_n(3); ba_n(3); v_n(3);]
 %
 % Input:
 %   u = a_lin_n (linear accel in nav frame)
@@ -13,9 +13,11 @@ function xk = SubEkfVelCalc(x, inputs)
 dt = inputs(1);
 
 % --- unpack state ---
-accel = x(1:3);     % acceleration [m/s^2]
-ba = x(4:6);        % accel bias residual [m/s^2]
-v = x(7:9);         % velocity [m/s]
+orien = x(1:4);     % orientation quaternion
+omega = x(5:7);     % angular speed [rad/s]
+accel = x(8:10);    % acceleration [m/s^2]
+ba = x(11:13);      % accel bias residual [m/s^2]
+v = x(14:16);       % velocity [m/s]
 
 % --- predict ---
 vx  = v + (accel - ba) * dt;
@@ -23,7 +25,11 @@ vx  = v + (accel - ba) * dt;
 % bias is modeled as random walk (constant in f)
 ba = ba;
 
+% We don't modify the orientation or omega, let the covariance manage that.
+orien = orien;
+omega = omega;
+
 % --- repack state ---
-xk = [accel; ba; vx];
+xk = [orien; omega; accel; ba; vx];
 
 end
