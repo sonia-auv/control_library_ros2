@@ -7,11 +7,6 @@ classdef ZUPT < matlab.System
     end
 
     properties(Nontunable)
-        staticWindow = 0.5;
-        thrusterNewtonUpperLimit = 2.0;
-        thrusterNewtonLowerLimit = 2.0;
-        accelLimit = 0.1
-        gyroLimit = 0.1
         sampleTime = 0.02;
     end
     
@@ -24,27 +19,29 @@ classdef ZUPT < matlab.System
             this.staticTicks = uint8(0);
         end
 
-        %% Step Function
-        function [isStatic] = stepImpl(this, accel, gyro, thrusterNewton)
+        %% Step FunctionthrusterNewtonUpperLimit
+        function [isStatic] = stepImpl(this, accel, gyro, thrusterNewton,...
+                staticWindow, thrusterNewtonUpperLimit,...
+                thrusterNewtonLowerLimit, accelLimit, gyroLimit)
             %stepImpl Function that executes 
 
-            if this.checkNewtonThrust(thrusterNewton)...
-                    && this.checkSensor(accel, this.accelLimit)...
-                    && this.checkSensor(gyro, this.gyroLimit)...
-                    && this.staticTicks * this.staticWindow <= this.staticWindow
+            if this.checkNewtonThrust(thrusterNewton, thrusterNewtonUpperLimit, thrusterNewtonLowerLimit)...
+                    && this.checkSensor(accel, accelLimit)...
+                    && this.checkSensor(gyro, gyroLimit)...
+                    && this.staticTicks * this.sampleTime <= staticWindow
                 this.staticTicks = this.staticTicks + 1;
             else
                 this.staticTicks = uint8(0);
             end
 
-            isStatic = double(this.staticTicks) * this.sampleTime > this.staticWindow;
+            isStatic = double(this.staticTicks) * this.sampleTime > staticWindow;
         end
 
-        function flag = checkNewtonThrust(this, thrust)
+        function flag = checkNewtonThrust(this, thrust, upperLimit, lowerLimit)
             flag = true;
             for i=1:4
-                if thrust(i) > this.thrusterNewtonUpperLimit(i)...
-                        || thrust(i) < this.thrusterNewtonLowerLimit(i)
+                if thrust(i) > upperLimit(i)...
+                        || thrust(i) < lowerLimit(i)
                     flag = false;
                     break;
                 end

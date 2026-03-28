@@ -61,11 +61,15 @@ function [simulink, simulation, physics, kalman, MPC, mode, sensors, accel_conve
 
    % Approximate 1st order tansfert function of the thruster 1 / (tau*s + 1)
    physics.thruster.tau = 0.10;
+   
+   
    sensors.has_dvl = false;
    sensors.imu_VN_linear_accel_bias = [0, 0, -10.29];
    sensors.imu_VN_accel_thresh = [0.1, 0.1, 0.1];
    sensors.imu_ZED_linear_accel_bias = [0, 0, -9.79];
    sensors.imu_ZED_accel_thresh = [0.1, 0.1, 0.1];
+   
+
 %% MPC
    % MPC parameters
        MPC.nx = 13; % Number of states
@@ -153,7 +157,7 @@ function [simulink, simulation, physics, kalman, MPC, mode, sensors, accel_conve
 
     % Covariences des capteurs
         kalman.Cimu = [0.01, 0.01, 0.01, 0.01, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1];
-        kalman.CimuZed = [0.01, 0.01, 0.01, 0.01, 0.01, 0.01];
+        kalman.CimuZed = [0.01, 0.01, 0.01];
         kalman.Cdvl = ones(1,3)*0.1;
         kalman.Cdepth = [0.1 0.01];
   %% Paramèetre de Simulation
@@ -224,11 +228,11 @@ function [simulink, simulation, physics, kalman, MPC, mode, sensors, accel_conve
         accel_conversion.NewtonUpperLimit = [2 2 2 2];
         accel_conversion.NewtonLowerLimit = [-2 -2 -2 -2];
         
-        accel_conversion.VectorNav_accel_bounds = [0.1 0.1 0.1];
-        accel_conversion.VectorNav_gyro_bounds = [0.05 0.05 0.05];
+        accel_conversion.VectorNav_accel_bounds = [0.3 0.3 0.3];
+        accel_conversion.VectorNav_gyro_bounds = [0.1 0.1 0.1];
 
-        accel_conversion.ZED_accel_bounds = [0.1 0.1 0.1];
-        accel_conversion.ZED_gyro_bounds = [0.05 0.05 0.05];
+        accel_conversion.ZED_accel_bounds = [0.3 0.3 0.3];
+        accel_conversion.ZED_gyro_bounds = [0.1 0.1 0.1];
 
 
 end
