@@ -158,10 +158,10 @@ function [simulink, simulation, physics, kalman, MPC, mode, sensors, accel_conve
         kalman.Cx = 100;
 
     % Covariences des capteurs
-        kalman.Cimu = [0.01, 0.01, 0.01, 0.01, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1];
-        kalman.CimuZed = [0.01, 0.01, 0.01];
-        kalman.Cdvl = ones(1,3)*0.1;
-        kalman.Cdepth = [0.1 0.01];
+        kalman.Cimu = [10, 10, 10, 10, 30, 30, 30, 30, 30, 30];
+        kalman.CimuZed = [1, 1, 1];
+        kalman.Cdvl = ones(1,3)*1;
+        kalman.Cdepth = [5];
   %% Paramèetre de Simulation
    % Gazebo
        simulation.gazebo.sampletime = simulink.sampletime;
