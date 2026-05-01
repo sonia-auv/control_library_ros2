@@ -49,15 +49,15 @@ function [simulink, simulation, physics, kalman, MPC, mode] = ConfigAUV8()
    % Transformation of the DVL frame to body frame
    physics.dvlRotation = [0,pi,pi/2]; % Z,Y,X
 
-   % Thrusters            x      y      z    yaw  roll pitch
-   physics.thruster.T= [ 0.292, 0.173, 0.082, -45,-90, 0;   % T1
-                        -0.292, 0.173, 0.082, 45,-90, 0;    % T2
-                        -0.292, -0.173, 0.082,-45,-90, 0;    % T3
-                         0.292, -0.173, 0.082, 45,-90, 0;    % T4
-                         0.181, 0.159, 0.082,  0,  0, 0;    % T5
-                        -0.181, 0.159, 0.082,  0,180, 0;    % T6
-                        -0.181, -0.159, 0.082,  0,  0, 0;    % T7
-                         0.181, -0.159, 0.082,  0,180, 0];   % T8
+   % Thrusters            x      y      z    yaw  pitch roll
+   physics.thruster.T= [ 0.292, 0.173, 0.082, 45,-90, 0;   % T1
+                        -0.292, 0.173, 0.082, -45,-90, 0;    % T2
+                        -0.292, -0.173, 0.082, 45,-90, 0;    % T3
+                         0.292, -0.173, 0.082, -45,-90, 0;    % T4
+                         0.181, 0.159, 0.082,  0, 0, 0;    % T5
+                        -0.181, 0.159, 0.082,  0, 180, 0;    % T6
+                        -0.181, -0.159, 0.082,  0, 0, 0;    % T7
+                         0.181, -0.159, 0.082,  0, 180, 0];   % T8
 
    % Approximate 1st order tansfert function of the thruster 1 / (tau*s + 1)
    physics.thruster.tau = 0.10;
@@ -147,9 +147,9 @@ function [simulink, simulation, physics, kalman, MPC, mode] = ConfigAUV8()
         kalman.Cx = 100;
 
     % Covariences des capteurs
-        kalman.Cimu = [0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01];
-        kalman.Cdvl = ones(1,3)*0.01;
-        kalman.Cdepth = [0.1];
+        kalman.Cimu = [0.00001, 0.00001, 0.00001, 0.00001, 0.00001, 0.00001, 0.00001];
+        kalman.Cdvl = ones(1,3)*0.00001;
+        kalman.Cdepth = [0.00001];
   %% Paramèetre de Simulation
    % Gazebo
        simulation.gazebo.sampletime = simulink.sampletime;

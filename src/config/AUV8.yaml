@@ -79,7 +79,7 @@ proc_control:
 
     # Center of boyency           x     y     z
     # This vector is define with solidwork.
-    rb: [0.003, -0.0002, 0.021] # distance (m) between center of boyency and the geometric center of the sub.
+    rb: [0.0028, 0.0001, 0.0222] # distance (m) between center of boyency and the geometric center of the sub.
 
     # Drag linear constants
     # This vector is guess
@@ -95,7 +95,7 @@ proc_control:
 
     # thusters definition
     # each row reprensent a thurster and each colunm reprensent an DOF
-    #                                    x      y      z    yaw  roll pitch
+    #                                    x      y      z    yaw  pitch roll
     thrusters: "0.292, 0.173, 0.082, -45,-90, 0,-0.292, 0.173, 0.082, 45,-90, 0,-0.292, -0.173, 0.082,-45,-90, 0,0.292, -0.173, 0.082, 45,-90, 0,0.181, 0.159, 0.082,  0,  0, 0,-0.181, 0.159, 0.082,  0,180, 0,-0.181, -0.159, 0.082,  0,  0, 0,0.181, -0.159, 0.082,  0,180, 0"
 
     # Sensors Definition
@@ -105,8 +105,9 @@ proc_control:
     # (If set to FALSE' when dvl is lost Kalman will use the theorectical model)
     dvl_lost_override: TRUE # Boolean
 
+
     # transformation of the DVL frame to body frame
-    dvl_rotation: "0, 3.14159265359, 1.57079632679" # rad
+    dvl_rotation: "3.14159265359, 0, 0" # rad
 
     # hydrophones distance acording to auv center
     hydro_pose: "0.160, 0.0, 0.155" # m
@@ -116,3 +117,7 @@ proc_control:
 
     # depth sensor distance according to the geometric center
     depth_pose: "0.0, -0.136, 0.178" # m
+
+  sensors:
+    has_dvl: TRUE
+    linear_acceleration_bias: "0.0, 0.0, -9.59066"

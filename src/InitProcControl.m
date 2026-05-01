@@ -14,7 +14,11 @@
 
         % Definir AUV pour mode interprété
         setenv("AUV","AUV8");
-        setenv("ROS_DOMAIN_ID", "11");
+        setenv("ROS_DOMAIN_ID", "29");
+        
+        SimulationActive=1;
+    else
+        SimulationActive=2;
     end
 
 %
@@ -38,11 +42,18 @@
     end
     
   fprintf('INFO : proc control : Load model of %s. \n', auv);
-  %ros2genmsg("~/ros2_sonia_ws/src/sonia_common_ros2");
+  % %ros2genmsg("~/ros2_sonia_ws/src/sonia_common_ros2");
 
 %% Load BUS
     mpcParamsBus();
     physicsConstantsBus();
+
+    load("virtual-robosub/data/thrustConfig.mat");
+    load("virtual-robosub/data/AUV.mat");
+    load("virtual-robosub/data/T200.mat");
+    %Calculate Earth magnetic field and secular variation at a location using International Geomagnetic Reference Field
+    [XYZ,H,D,I,F] = igrfmagm(1,33.7021,-117.7805,decyear(2024,7,4),13);
+    EnableGeospatial=false;
 
 %% Modèle du thruster
     load('T200-Spec-16V.mat');
