@@ -1,4 +1,4 @@
-function [simulink, simulation, physics, kalman, MPC, mode,config] = ConfigAUV8()
+function [simulink, simulation, physics, kalman, MPC, mode, config] = ConfigAUVLITE()
 
 %% Paramètre simulink
     simulink.sampletime = 1/50;
@@ -8,26 +8,26 @@ function [simulink, simulation, physics, kalman, MPC, mode,config] = ConfigAUV8(
     simulink.ros.paramSampletime = 2;
 
 %% Constantes Physiques
-   physics.mass = 31; % Kg
-   physics.volume = 0.0315; % M^3
+   physics.mass = 26; % Kg
+   physics.volume = 0.029; % M^3
    physics.rho = 998;
    physics.g = 9.81;
-   physics.dvlCenterDist =0.1435;
-   physics.height=.15;
+   %physics.dvlCenterDist =0.1435;
+   physics.height=.34;
 
-   physics.I = [0.4756, 0.008, 0.004;... Ixx Ixy Ixz 0.5358
-               0.008, 1.3735, -0.001;... Iyx Iyy Iyz 1.47
-               0.004, -0.001, 1.5371]; % Izx Izy Izz1.68
+   physics.I = [ 1.0878, -0.0294, -0.0046; ... Ixx Ixy Ixz 0.5358
+                -0.0630,  1.3200, -0.0007; ... Iyx Iyy Iyz 1.47
+                -0.0116, -0.0008,  1.3245 ]; % Izx Izy Izz1.68
 
    % Center of mass
-   physics.RG =[0.001,... x
-                0.002,... y
-                0.018]; % z
+   physics.RG =[0.000,... x
+                0.000,... y
+                0.005]; % z
 
    % Center of boyency
-   physics.RB =[-0.000,... x
+   physics.RB =[0.000,... x
                 0.000,... y
-               -0.006]; % z
+                0.00]; % z
    % Drag
    physics.CDL=[45, 60, 70, 10, 7, 15]/3;
 
@@ -49,18 +49,29 @@ function [simulink, simulation, physics, kalman, MPC, mode,config] = ConfigAUV8(
    % Transformation of the DVL frame to body frame
    physics.dvlRotation = [0,pi,pi/2]; % Z,Y,X
 
-   % Thrusters            x      y      z    yaw  pitch roll
-   physics.thruster.T= [ 0.292, 0.173, 0.082, 45,-90, 0;   % T1
-                        -0.292, 0.173, 0.082, -45,-90, 0;    % T2
-                        -0.292, -0.173, 0.082, 45,-90, 0;    % T3
-                         0.292, -0.173, 0.082, -45,-90, 0;    % T4
-                         0.181, 0.159, 0.082,  0, 0, 0;    % T5
-                        -0.181, 0.159, 0.082,  0, 180, 0;    % T6
-                        -0.181, -0.159, 0.082,  0, 0, 0;    % T7
-                         0.181, -0.159, 0.082,  0, 180, 0];   % T8
+   % Thrusters             x       y       z    yaw  roll pitch
+   physics.thruster.T= [ 0.250,  0.275, -0.030, -45, -90,  0;   % T1
+                        -0.250,  0.275, -0.030,  45, -90,  0;    % T2
+                        -0.250, -0.275, -0.030, -45, -90,  0;    % T3
+                         0.250, -0.275, -0.030,  45, -90,  0;    % T4
+                         0.120,  0.275, -0.030,  0,   0,   0;    % T5
+                        -0.120,  0.275, -0.030,  0,   180, 0;    % T6
+                        -0.120, -0.275, -0.030,  0,   0,   0;    % T7
+                         0.120, -0.275, -0.030,  0,   180, 0];   % T8
 
    % Approximate 1st order tansfert function of the thruster 1 / (tau*s + 1)
    physics.thruster.tau = 0.10;
+   
+   
+   sensors.has_dvl = false;
+   sensors.imu_VN_pos = [0 0 0.107];
+   sensors.imu_VN_linear_accel_bias = [0, 0, -10.29];
+   sensors.imu_VN_accel_thresh = [0.1, 0.1, 0.1];
+   sensors.imu_ZED_pos = [0.14715 -0.03 0.03522];
+   sensors.imu_ZED_linear_accel_bias = [0, 0, -9.79];
+   sensors.imu_ZED_accel_thresh = [0.1, 0.1, 0.1];
+   
+
 %% MPC
    % MPC parameters
        MPC.nx = 13; % Number of states
@@ -147,9 +158,9 @@ function [simulink, simulation, physics, kalman, MPC, mode,config] = ConfigAUV8(
         kalman.Cx = 100;
 
     % Covariences des capteurs
-        kalman.Cimu = [0.00001, 0.00001, 0.00001, 0.00001, 0.00001, 0.00001, 0.00001, 0.00001, 0.00001, 0.00001];
-        kalman.Cdvl = ones(1,3)*0.00001;
-        kalman.Cdepth = [0.00001];
+        kalman.Cimu = [0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001];
+        kalman.Cdvl = ones(1,3)*0.001;
+        kalman.Cdepth = [0.001];
         kalman.CimuZED = [0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001];
   %% Paramèetre de Simulation
    % Gazebo
@@ -206,8 +217,7 @@ function [simulink, simulation, physics, kalman, MPC, mode,config] = ConfigAUV8(
         simulation.drift.ts = 5;
 
   % Configuration
-    config.dvl=1;
+    config.dvl=0;
 
 
-    end
-
+end

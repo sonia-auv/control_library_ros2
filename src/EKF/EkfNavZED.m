@@ -1,4 +1,4 @@
-function y = EkfNavAhrs(x)
+function y = EkfNavZED(x)
 %EKFNAVMESUREDF Summary of this function goes here
 %   Detailed explanation goes here
 y=x([4:7 8:10 11:13]);

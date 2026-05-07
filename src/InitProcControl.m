@@ -27,7 +27,7 @@
 % Parametre et constantes
     switch auv
         case 'AUV8'
-            [simulink, simulation, physics, kalman, MPC, mode] = ConfigAUV8();
+            [simulink, simulation, physics, kalman, MPC, mode, config] = ConfigAUV8();
             % fprintf('INFO: Loading AUV8\n');
             %nodeParams = readyaml("config/AUV8.yaml");
             %node = ros2node("proc_control", 8, Parameters=nodeParams);
@@ -37,6 +37,8 @@
             %nodeParams = readyaml("config/AUV7.yaml");
             %node = ros2node("proc_control", 7, Parameters=nodeParams);
             % system("ros2 param load proc_control ./config/AUV7.yaml");
+        case 'LITE1'
+            [simulink, simulation, physics, kalman, MPC, mode, config] = ConfigAUVLITE();
         otherwise
             return;
     end
