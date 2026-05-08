@@ -15,6 +15,7 @@
         % Definir AUV pour mode interprété
         setenv("AUV","AUV8");
         setenv("ROS_DOMAIN_ID", "0");
+        setenv('ROS_AUTOMATIC_DISCOVERY_RANGE', 'SUBNET')
         
         SimulationActive=1;
         SimulationActive=2;

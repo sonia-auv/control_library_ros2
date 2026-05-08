@@ -14,6 +14,12 @@ switch auv
             %nodeParams = readyaml("config/AUV7.yaml");
             %node = ros2node("proc_control", 7, Parameters=nodeParams);
             % system("ros2 param load proc_control ./config/AUV7.yaml");
+        case 'LITE1'
+            [simulink, simulation, physics, kalman, MPC, mode] = ConfigAUVLITE();
+            nodeParams = readyaml("config/AUV8.yaml");
+            %nodeParams = readyaml("config/AUV7.yaml");
+            %node = ros2node("proc_control", 7, Parameters=nodeParams);
+            % system("ros2 param load proc_control ./config/AUV7.yaml");
         otherwise
             return;
 end
