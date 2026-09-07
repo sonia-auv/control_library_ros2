@@ -1,6 +1,9 @@
 auv = getenv("AUV");
 modelName="proc_control";
 switch auv
+        case 'AUV8SIMU'
+            fprintf("Loading Params!!\n");
+            nodeParams = readyaml("config/AUV8.yaml");
         case 'AUV8'
             fprintf("Loading Params!!\n");
             nodeParams = readyaml("config/AUV8.yaml");
@@ -16,14 +19,25 @@ switch auv
             % system("ros2 param load proc_control ./config/AUV7.yaml");
         case 'LITE1'
             [simulink, simulation, physics, kalman, MPC, mode] = ConfigAUVLITE();
-            nodeParams = readyaml("config/AUV8.yaml");
+            nodeParams = readyaml("config/AUVLITE.yaml");
             %nodeParams = readyaml("config/AUV7.yaml");
             %node = ros2node("proc_control", 7, Parameters=nodeParams);
             % system("ros2 param load proc_control ./config/AUV7.yaml");
         otherwise
             return;
 end
-nodelist = ros2("node","list");
+isNodeStarted = false;
+cpt = 0;
+while ~isNodeStarted && cpt < 30
+    nodelist = ros2("node","list");
+    if contains(nodelist,modelName)
+        isNodeStarted = true;
+    else
+        cpt = cpt+1;
+        pause(0.5); % Pause for 500ms before checking again
+    end
+    
+end
 simNodeArr = strfind(nodelist,modelName);
 simNodeIdx = find(~cellfun(@isempty, simNodeArr));
 simNodeName = nodelist{simNodeIdx};

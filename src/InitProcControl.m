@@ -5,7 +5,7 @@
 % Regarder si le code est compiler ou si on roule en interprété
     if coder.target('MATLAB')
 
-        clear;
+       clear;
        %  % Regarder si le node ros matlab est actif
        % if ~ ros.internal.Global.isNodeActive
        %      % partir le node ros matlab
@@ -13,17 +13,20 @@
        %  end
 
         % Definir AUV pour mode interprété
-        setenv("AUV","AUV8");
+        setenv("AUV","AUV8SIMU");
         setenv("ROS_DOMAIN_ID", "0");
-        setenv('ROS_AUTOMATIC_DISCOVERY_RANGE', 'SUBNET')
+        setenv('ROS_LOCALHOST_ONLY', '');
+        setenv('ROS_AUTOMATIC_DISCOVERY_RANGE', 'SUBNET');
+        setenv('RMW_IMPLEMENTATION', 'rmw_fastrtps_cpp')
         
         SimulationActive=1;
-        SimulationActive=2;
         load("virtual-robosub/data/thrustConfig.mat");
         load("virtual-robosub/data/AUV.mat");
         load("virtual-robosub/data/T200.mat");
         %Calculate Earth magnetic field and secular variation at a location using International Geomagnetic Reference Field
-        [XYZ,H,D,I,F] = igrfmagm(1,33.7021,-117.7805,decyear(2024,7,4),13);
+        XYZ = [1.9471 -0.5086 4.8177];
+        
+        
     else
         SimulationActive=2;
     end
@@ -33,6 +36,8 @@
     auv = getenv("AUV");
 % Parametre et constantes
     switch auv
+        case 'AUV8SIMU'
+            [simulink, simulation, physics, kalman, MPC, mode, config] = ConfigAUV8SIMU();
         case 'AUV8'
             [simulink, simulation, physics, kalman, MPC, mode, config] = ConfigAUV8();
             % fprintf('INFO: Loading AUV8\n');
@@ -49,7 +54,6 @@
         otherwise
             return;
     end
-    
   fprintf('INFO : proc control : Load model of %s. \n', auv);
   % %ros2genmsg("~/ros2_sonia_ws/src/sonia_common_ros2");
 

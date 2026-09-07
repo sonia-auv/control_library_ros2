@@ -147,10 +147,12 @@ function [simulink, simulation, physics, kalman, MPC, mode,config] = ConfigAUV8(
         kalman.Cx = 100;
 
     % Covariences des capteurs
-        kalman.Cimu = [0.00001, 0.00001, 0.00001, 0.00001, 0.00001, 0.00001, 0.00001, 0.00001, 0.00001, 0.00001];
-        kalman.Cdvl = ones(1,3)*0.00001;
-        kalman.Cdepth = [0.00001];
-        kalman.CimuZED = [0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001];
+        % kalman.Cimu = [0.00001, 0.00001, 0.00001, 0.00001, 0.00001, 0.00001, 0.00001, 0.00001, 0.00001, 0.00001];
+        kalman.Cdvl = ones(1,3)*0.075;
+        kalman.Cdepth = [0.01];
+        % kalman.CimuZED = [0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001];
+        kalman.Cimu = [0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1];
+        kalman.CimuZED = [0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1];
   %% Paramèetre de Simulation
    % Gazebo
        simulation.gazebo.sampletime = simulink.sampletime;
