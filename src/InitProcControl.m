@@ -20,9 +20,9 @@
         setenv('RMW_IMPLEMENTATION', 'rmw_fastrtps_cpp')
         
         SimulationActive=1;
-        load("data/thrustConfig.mat");
-        load("data/AUV.mat");
-        load("data/T200.mat");
+        load("virtual-robosub/data/thrustConfig.mat");
+        load("virtual-robosub/data/AUV.mat");
+        load("virtual-robosub/data/T200.mat");
         %Calculate Earth magnetic field and secular variation at a location using International Geomagnetic Reference Field
         XYZ = [1.9471 -0.5086 4.8177];
         
