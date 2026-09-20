@@ -7,3 +7,4 @@ src/proc_control
 src/sonia_common_ros2
 src/matlab_msg_gen
 +bus_conv_fcns/*
+proc_control_cgxe.mexa64
