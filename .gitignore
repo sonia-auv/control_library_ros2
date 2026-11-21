@@ -8,3 +8,4 @@ src/sonia_common_ros2
 src/matlab_msg_gen
 +bus_conv_fcns/*
 proc_control_cgxe.mexa64
++bus_conv_fcns/+ros2/+busToMsg/*

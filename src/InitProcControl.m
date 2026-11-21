@@ -5,7 +5,10 @@
 % Regarder si le code est compiler ou si on roule en interprété
     if coder.target('MATLAB')
 
-       clear;
+        value = asBennInit();
+
+        clear;
+        config_simulation;
        %  % Regarder si le node ros matlab est actif
        % if ~ ros.internal.Global.isNodeActive
        %      % partir le node ros matlab
@@ -14,17 +17,25 @@
 
         % Definir AUV pour mode interprété
         setenv("AUV","AUV8SIMU");
-        setenv("ROS_DOMAIN_ID", "0");
+        % setenv("AUV","LITE1SIMU");
+        setenv("ROS_DOMAIN_ID", "15");
         setenv('ROS_LOCALHOST_ONLY', '');
         setenv('ROS_AUTOMATIC_DISCOVERY_RANGE', 'SUBNET');
         setenv('RMW_IMPLEMENTATION', 'rmw_fastrtps_cpp')
         
         SimulationActive=1;
+        % SimulationActive=2;
         load("virtual-robosub/data/thrustConfig.mat");
         load("virtual-robosub/data/AUV.mat");
         load("virtual-robosub/data/T200.mat");
         %Calculate Earth magnetic field and secular variation at a location using International Geomagnetic Reference Field
-        XYZ = [1.9471 -0.5086 4.8177];      
+        XYZ = [1.9471 -0.5086 4.8177];
+
+        value = asBennInit();
+        if asBennInit()==0
+            RegerenateSubscriber();
+        end
+
     else
         SimulationActive=2;
     end
@@ -49,6 +60,8 @@
             % system("ros2 param load proc_control ./config/AUV7.yaml");
         case 'LITE1'
             [simulink, simulation, physics, kalman, MPC, mode, config] = ConfigAUVLITE();
+        case 'LITE1SIMU'
+            [simulink, simulation, physics, kalman, MPC, mode, config] = ConfigAUVLITESIMU();
         otherwise
             return;
     end
