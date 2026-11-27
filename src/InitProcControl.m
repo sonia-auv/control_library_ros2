@@ -17,8 +17,9 @@
 
         % Definir AUV pour mode interprété
         setenv("AUV","AUV8SIMU");
+        % setenv("AUV","AUV8");
         % setenv("AUV","LITE1SIMU");
-        setenv("ROS_DOMAIN_ID", "15");
+        setenv("ROS_DOMAIN_ID", "0");
         setenv('ROS_LOCALHOST_ONLY', '');
         setenv('ROS_AUTOMATIC_DISCOVERY_RANGE', 'SUBNET');
         setenv('RMW_IMPLEMENTATION', 'rmw_fastrtps_cpp')

@@ -140,7 +140,7 @@ function [simulink, simulation, physics, kalman, MPC, mode,config] = ConfigAUV8(
   %% Paramètre du filtre de kalman
     % Paramètre initial
         kalman.Xi = [0,0,0.3,1,0,0,0,0,0,0,0,0,0];
-        kalman.Ci = 10*[1,1,1,1,1,1,1,1,1,1,1,1,1];
+        kalman.Ci = [1,1,1,1,1,1,1,1,1,1,1,1,1];
 
     % Covariences du modele
         kalman.stateFnc = 'EkfNavStatesEq';
@@ -148,11 +148,12 @@ function [simulink, simulation, physics, kalman, MPC, mode,config] = ConfigAUV8(
 
     % Covariences des capteurs
         % kalman.Cimu = [0.00001, 0.00001, 0.00001, 0.00001, 0.00001, 0.00001, 0.00001, 0.00001, 0.00001, 0.00001];
-        kalman.Cdvl = ones(1,3)*0.075;
+        kalman.Cdvl = ones(1,3)*0.0075;
         kalman.Cdepth = [0.01];
+        % kalman.CimuZED = [rotation 4, linear_speed 3,rotation_speed 3];
         % kalman.CimuZED = [0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001];
-        kalman.Cimu = [0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1];
-        kalman.CimuZED = [0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1];
+        kalman.Cimu = [0.001, 0.001, 0.001, 0.001, 0.1, 0.1, 0.1, 0.001, 0.001, 0.001];
+        kalman.CimuZED = [0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01];
   %% Paramèetre de Simulation
    % Gazebo
        simulation.gazebo.sampletime = simulink.sampletime;

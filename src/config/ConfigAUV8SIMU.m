@@ -140,7 +140,7 @@ function [simulink, simulation, physics, kalman, MPC, mode,config] = ConfigAUV8S
   %% Paramètre du filtre de kalman
     % Paramètre initial
         kalman.Xi = [0,0,0.3,1,0,0,0,0,0,0,0,0,0];
-        kalman.Ci = 10*[1,1,1,1,1,1,1,1,1,1,1,1,1];
+        kalman.Ci = [1,1,1,1,1,1,1,1,1,1,1,1,1];
 
     % Covariences du modele
         kalman.stateFnc = 'EkfNavStatesEq';

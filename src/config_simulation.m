@@ -25,7 +25,7 @@ CoB_simulation = [0.01,0.00,-0.24];
 
 %Arm section
 position_initial = [0,0,0];
-orientation_initial = [0,pi/2,0];
+orientation_initial = [0,0,0];
 %Definition of arm
 % Considering the Length is the length to next joint
 % roll,pitch,yaw are the axe of rotation of the joint at 100% PWM
